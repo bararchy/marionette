@@ -8,17 +8,21 @@ module Marionette
     property max_packet_length : Int32
     property min_protocol_level : Int32
 
-    getter timeout : Int32
     getter last_id : Int32
 
     @socket : TCPSocket
 
     # Creates a new Transport instance with the
     # provided `timeout`.
-    def initialize(addr : String, port : Int32, @timeout : Int32 | Time::Span = 60.seconds)
-      @socket = TCPSocket.new(addr, port, dns_timeout: @timeout, connect_timeout: @timeout)
-      @socket.read_timeout = @timeout
-      @socket.write_timeout = @timeout
+    def initialize(addr : String, port : Int32, timeout : Int32)
+      # TCP Socket timeout works with seconds as Int, 30000 seconds is no timeout at all.
+      if timeout.is_a?(Int32)
+        timeout = timeout / 1000
+      end
+
+      @socket = TCPSocket.new(addr, port, dns_timeout: timeout, connect_timeout: timeout)
+      @socket.read_timeout = timeout
+      @socket.write_timeout = timeout
       @last_id = 0
       @max_packet_length = 2048
       @min_protocol_level = 3
