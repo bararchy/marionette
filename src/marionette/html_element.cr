@@ -37,7 +37,7 @@ module Marionette
       params = {id: @id, name: name}
       response = @browser.transport.request("WebDriver:GetElementProperty", params)
       if response
-        response["value"].as_s?
+        return response["value"].as_s?
       end
     end
 
