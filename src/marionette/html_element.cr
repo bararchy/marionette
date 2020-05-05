@@ -24,17 +24,21 @@ module Marionette
     end
 
     # Returns the value of the requested attribute
-    def attribute(name)
+    def attribute(name) : String?
       params = {id: @id, name: name}
       response = @browser.transport.request("WebDriver:GetElementAttribute", params)
-      response["value"].as_s?
+      if response
+        return response["value"].as_s?
+      end
     end
 
     # Returns the requested property
-    def property(name)
+    def property(name) : String?
       params = {id: @id, name: name}
       response = @browser.transport.request("WebDriver:GetElementProperty", params)
-      response["value"].as_s?
+      if response
+        response["value"].as_s?
+      end
     end
 
     # Simulate a click on the element
