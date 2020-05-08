@@ -66,15 +66,14 @@ module Marionette
     # TODO: Add timeout
     def receive_raw
       data = ""
-
       len = @socket.gets(':').to_s.chomp(':').to_i
-
-      until data.bytesize == len
-        remaining = len - data.bytesize
-        num_bytes = [@max_packet_length, remaining].min
-        data += @socket.read_string(num_bytes)
+      done = len
+      until done.zero?
+        buff = Bytes.new(done)
+        read = @socket.read(buff)
+        done -= read
+        data += String.new(buff[0,read])
       end
-
       data
     end
 
