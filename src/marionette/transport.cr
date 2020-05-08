@@ -71,6 +71,7 @@ module Marionette
       until done.zero?
         buff = Bytes.new(done)
         read = @socket.read(buff)
+        break if read.zero?
         done -= read
         data += String.new(buff[0,read])
       end
