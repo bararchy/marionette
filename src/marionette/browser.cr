@@ -614,9 +614,11 @@ module Marionette
     end
 
     # Get the source for the current page.
-    def page_source
+    def page_source : String?
       response = @transport.request("WebDriver:GetPageSource")
-      response["value"].as_s
+      if params = response.params.as_h?
+        params["value"].as_s?
+      end
     end
 
     # Execute JS script. If `new_sandbox` is true (default) the global
