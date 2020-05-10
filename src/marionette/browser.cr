@@ -666,10 +666,10 @@ module Marionette
     end
 
     # Gets the text from a dialog
-    def text_from_dialog
+    def text_from_dialog : String?
       response = @transport.request("WebDriver:GetAlertText")
       if params = response.params.as_h?
-        params["value"].as_s
+        params["value"].as_s?
       end
     end
 
