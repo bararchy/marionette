@@ -105,7 +105,7 @@ module Marionette
       end
     end
 
-    getter transport : Transport
+    getter transport : Synchronized(Transport)
 
     getter proxy : Proxy?
 
@@ -116,7 +116,7 @@ module Marionette
     getter? extended : Bool
 
     def initialize(@address : String, @port : Int32, @extended = false, @timeout = 60000)
-      @transport = Transport.new(@address, @port, @timeout)
+      @transport = Synchronized(Transport).new(Transport.new(@address, @port, @timeout))
       @transport.connect
       launch_proxy if extended
 
@@ -239,9 +239,11 @@ module Marionette
     end
 
     # Get the current url
-    def url
+    def url : String?
       response = @transport.request("WebDriver:GetCurrentURL")
-      response["value"].as_s
+      if response
+        response["value"].as_s
+      end
     end
 
     # Refresh the page

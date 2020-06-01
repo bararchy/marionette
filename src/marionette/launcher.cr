@@ -8,13 +8,13 @@ module Marionette
     firefox_PROFILE_PATH = File.join(Dir.tempdir, "marionette_dev_profile-")
 
     # Array of handlers to call on browser exit
-    getter exit_handlers : Array(Proc(Void))
+    getter exit_handlers : Synchronized(Array(Proc(Void)))
 
     # Creates a new `Launcher` instance in the specified `project_root`.
     # Optionally a preferred revision can be included, which will be
     # used if no other revision information is set.
     def initialize
-      @exit_handlers = [] of Proc(Void)
+      @exit_handlers = Synchronized(Array(Proc(Void))).new
     end
 
     # Launch a `Broswer` instance with the specified options. Configuration
@@ -53,16 +53,15 @@ module Marionette
       extended = false,
       browser_capabilities = nil
     )
-
       executable = resolve_executable_path if executable.nil?
 
       capabilities = {
         acceptInsecureCerts: accept_insecure_certs,
-        timeouts: {
+        timeouts:            {
           implicit: timeout,
           pageLoad: timeout,
-          script: timeout
-        }
+          script:   timeout,
+        },
       }
       capabilities = capabilities.merge(browser_capabilities) if browser_capabilities
 
