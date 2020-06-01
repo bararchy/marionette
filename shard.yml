@@ -10,7 +10,9 @@ dependencies:
   har:
     github: NeuraLegion/har
     version: ~> 1.1.0
+  mt_helpers:
+    github: NeuraLegion/mt_helpers
 
-crystal: 0.24.1
+crystal: 0.34.1
 
 license: MIT
