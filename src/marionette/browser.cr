@@ -242,7 +242,7 @@ module Marionette
     def url : String?
       response = @transport.request("WebDriver:GetCurrentURL")
       if response
-        response["value"].as_s
+        response["value"]?.try &.as_s?
       end
     end
 
